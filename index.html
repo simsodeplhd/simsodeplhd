@@ -1,0 +1,214 @@
+<html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
+  <meta charset="utf-8" />
+  <title>Phần mềm lọc số đẹp</title>
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"
+  ></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script>
+    var dataCH = [];
+    function chuanhoa(data) {
+      let newData = data.map(item => {
+        if (item == undefined) item = "";
+        let newItem = item
+          .replace(/\./g, "")
+          .replace(/\,/g, "")
+          .replace(/O/g, "0")
+          .replace(/ /g, "");
+        if (newItem.length == 9) newItem = "0" + newItem;
+        return newItem;
+      });
+
+      newData = newData.filter(item => {
+        return item.length == 10;
+      });
+
+      return newData;
+    }
+    var ExcelToJSON = function() {
+      document.querySelector(
+        "#noti"
+      ).innerHTML = `<span class="badge badge-warning">Đang xử lý</span>`;
+      this.parseExcel = function(file) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+          var data = e.target.result;
+          var workbook = XLSX.read(data, {
+            type: "binary"
+          });
+
+          var sheetData = [];
+
+          workbook.SheetNames.forEach(function(sheetName) {
+            // Here is your object
+            var XL_row_object = XLSX.utils.sheet_to_row_object_array(
+              workbook.Sheets[sheetName]
+            );
+            var json_object = JSON.stringify(XL_row_object);
+            console.log(JSON.parse(json_object));
+
+            let data = JSON.parse(json_object);
+            data = data.map(object => {
+              return object.SIM;
+            });
+
+            console.log(data);
+
+            data = chuanhoa(sheetData.concat(data));
+            sheetData = data;
+            console.log(data);
+
+            dataCH = data;
+
+            document.querySelector(
+              "#noti"
+            ).innerHTML = `<span class="badge badge-success">Đã xử lý chuỗi số thành công</span>`;
+          });
+        };
+
+        reader.onerror = function(ex) {
+          console.log(ex);
+        };
+
+        reader.readAsBinaryString(file);
+      };
+    };
+
+    function handleFileSelect(evt) {
+      var files = evt.target.files; // FileList object
+      var xl2json = new ExcelToJSON();
+      xl2json.parseExcel(files[0]);
+    }
+  </script>
+
+  <body>
+    <script src="xls-export.js"></script>
+    <script src="filter.js"></script>
+
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Lọc sim số đẹp</a>
+    </nav>
+
+    <div class="container">
+      <br />
+      <form enctype="multipart/form-data">
+        <input id="upload" type="file" name="files[]" />
+      </form>
+      <div id="noti"></div>
+      <br />
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <h5>Lọc theo abxy</h5>
+
+          <form>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Chiều dài đầu và cuối</span>
+                </div>
+                <input type="number" id="a" class="form-control" />
+                <input type="number" id="b" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Tổng số đầu và cuối</span>
+                </div>
+
+                <input type="number" id="x" class="form-control" />
+                <input type="number" id="y" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button
+                onclick="abxyFilter()"
+                type="button"
+                class="btn btn-primary"
+              >
+                Lọc và tải xuống
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <br />
+      <div class="card">
+        <div class="card-body">
+          <h5>Lọc số đuôi</h5>
+
+          <form>
+            <div class="form-group">
+              <div class="input-group flex-nowrap">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="addon-wrapping"
+                    >Nhập số đuôi</span
+                  >
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastNum"
+                  placeholder="Số đuôi, ví dụ: 4243"
+                  aria-describedby="addon-wrapping"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button
+                onclick="lastFilter()"
+                type="button"
+                class="btn btn-success"
+              >
+                Lọc và tải xuống
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- <textarea
+      class="form-control"
+      rows="35"
+      cols="120"
+      id="xlx_json"
+    ></textarea> -->
+
+    <script>
+      document
+        .getElementById("upload")
+        .addEventListener("change", handleFileSelect, false);
+    </script>
+  </body>
+</html>
