@@ -29,6 +29,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script>
     var dataCH = [];
+    var dataCHObj = [];
+
     function chuanhoa(data) {
       let newData = data.map(item => {
         if (item == undefined) item = "";
@@ -47,6 +49,37 @@
 
       return newData;
     }
+
+    function chuanhoaObj(data) {
+      let newData = data.map(item => {
+        if (item.sim == undefined) item.sim = "";
+        if (item.price == undefined) item.price = "0";
+
+        let newItem = item;
+
+        newItem.sim = newItem.sim
+          .replace(/\./g, "")
+          .replace(/\,/g, "")
+          .replace(/O/g, "0")
+          .replace(/ /g, "");
+
+        newItem.price = JSON.stringify(newItem.price)
+          .replace(/\./g, " ")
+          .replace(/\,/g, " ");
+
+        console.log("NEW", newItem.sim);
+
+        if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
+        return newItem;
+      });
+
+      newData = newData.filter(item => {
+        return item.sim.length == 10;
+      });
+
+      return newData;
+    }
+
     var ExcelToJSON = function() {
       document.querySelector(
         "#noti"
@@ -61,6 +94,7 @@
           });
 
           var sheetData = [];
+          var sheetObj = [];
 
           workbook.SheetNames.forEach(function(sheetName) {
             // Here is your object
@@ -71,17 +105,24 @@
             console.log(JSON.parse(json_object));
 
             let data = JSON.parse(json_object);
+
+            let dataObj = data.map(object => {
+              return {
+                sim: object.SIM,
+                price: object.PRICE || 0
+              };
+            });
+
             data = data.map(object => {
               return object.SIM;
             });
 
-            console.log(data);
-
             data = chuanhoa(sheetData.concat(data));
             sheetData = data;
-            console.log(data);
-
             dataCH = data;
+
+            sheetObj = sheetObj.concat(chuanhoaObj(dataObj));
+            dataCHObj = sheetObj;
 
             document.querySelector(
               "#noti"
@@ -155,6 +196,14 @@
                 class="btn btn-primary"
               >
                 Lọc và tải xuống
+              </button>
+
+              <button
+                onclick="abxyFilterObj()"
+                type="button"
+                class="btn btn-success"
+              >
+                Lọc và tải xuống với giá
               </button>
             </div>
           </form>
