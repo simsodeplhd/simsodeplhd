@@ -26,6 +26,10 @@
         .replace(/\,/g, "")
         .replace(/O/g, "0")
         .replace(/ /g, "");
+        
+      if (newItem.indexOf("=") != -1) newItem = newItem.substring(0, newItem.indexOf("="));
+
+
       if (newItem.length == 9) newItem = "0" + newItem;
       return newItem;
     });

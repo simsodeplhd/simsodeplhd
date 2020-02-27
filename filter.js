@@ -1,5 +1,5 @@
 function isNull() {
-  if (dataCH.length == 0) {
+  if (dataCH.length == 0 || dataCHObj.length == 0) {
     alert("Bạn chưa mở file excel");
     return true;
   }
