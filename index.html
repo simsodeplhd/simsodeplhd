@@ -1,277 +1,245 @@
 <html>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 
-  <meta charset="utf-8" />
-  <title>Phần mềm lọc số đẹp - Lê Hữu Dũng</title>
-  <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-    crossorigin="anonymous"
-  />
-  <script
-    src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"
-  ></script>
-  <script
-    src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"
-  ></script>
+<meta charset="utf-8" />
+<title>Phần mềm lọc số đẹp - Lê Hữu Dũng</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+  integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    var dataCH = [];
-    var dataCHObj = [];
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+  var dataCH = [];
+  var dataCHObj = [];
 
-    function chuanhoa(data) {
-      let newData = data.map(item => {
-        if (item == undefined) item = "";
-        let newItem = item
-          .replace(/\./g, "")
-          .replace(/\,/g, "")
-          .replace(/O/g, "0")
-          .replace(/ /g, "");
-        if (newItem.length == 9) newItem = "0" + newItem;
-        return newItem;
-      });
+  function chuanhoa(data) {
+    let newData = data.map(item => {
+      if (item == undefined) item = "";
+      let newItem = item
+        .replace(/\./g, "")
+        .replace(/\,/g, "")
+        .replace(/O/g, "0")
+        .replace(/ /g, "");
+      if (newItem.length == 9) newItem = "0" + newItem;
+      return newItem;
+    });
 
-      newData = newData.filter(item => {
-        return item.length == 10;
-      });
+    newData = newData.filter(item => {
+      return item.length == 10;
+    });
 
-      return newData;
-    }
+    return newData;
+  }
 
-    function chuanhoaObj(data) {
-      let newData = data.map(item => {
-        if (item.sim == undefined) item.sim = "";
-        if (item.price == undefined) item.price = "0";
+  function chuanhoaObj(data) {
+    let newData = data.map(item => {
+      if (item.sim == undefined) item.sim = "";
+      if (item.price == undefined) item.price = "0";
 
-        let newItem = item;
+      let newItem = item;
 
-        newItem.sim = newItem.sim
-          .replace(/\./g, "")
-          .replace(/\,/g, "")
-          .replace(/O/g, "0")
-          .replace(/ /g, "");
+      newItem.sim = newItem.sim
+        .replace(/\./g, "")
+        .replace(/\,/g, "")
+        .replace(/O/g, "0")
+        .replace(/ /g, "");
 
-        newItem.price = JSON.stringify(newItem.price)
-          .replace(/\./g, " ")
-          .replace(/\,/g, " ");
+      if (newItem.sim.indexOf("=") != -1) newItem.sim = newItem.sim.substring(0, newItem.sim.indexOf("="));
 
-        console.log("NEW", newItem.sim);
+      newItem.price = JSON.stringify(newItem.price)
+        .replace(/\./g, " ")
+        .replace(/\,/g, " ");
 
-        if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
-        return newItem;
-      });
+      console.log("NEW", newItem.sim);
 
-      newData = newData.filter(item => {
-        return item.sim.length == 10;
-      });
+      if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
+      return newItem;
+    });
 
-      return newData;
-    }
+    newData = newData.filter(item => {
+      return item.sim.length == 10;
+    });
 
-    var ExcelToJSON = function() {
-      document.querySelector(
-        "#noti"
-      ).innerHTML = `<span class="badge badge-warning">Đang xử lý</span>`;
-      this.parseExcel = function(file) {
-        var reader = new FileReader();
+    return newData;
+  }
 
-        reader.onload = function(e) {
-          var data = e.target.result;
-          var workbook = XLSX.read(data, {
-            type: "binary"
+  var ExcelToJSON = function () {
+    document.querySelector(
+      "#noti"
+    ).innerHTML = `<span class="badge badge-warning">Đang xử lý</span>`;
+    this.parseExcel = function (file) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        var data = e.target.result;
+        var workbook = XLSX.read(data, {
+          type: "binary"
+        });
+
+        var sheetData = [];
+        var sheetObj = [];
+
+        workbook.SheetNames.forEach(function (sheetName) {
+          // Here is your object
+          var XL_row_object = XLSX.utils.sheet_to_row_object_array(
+            workbook.Sheets[sheetName]
+          );
+          var json_object = JSON.stringify(XL_row_object);
+          console.log(JSON.parse(json_object));
+
+          let data = JSON.parse(json_object);
+
+          let dataObj = data.map(object => {
+            return {
+              sim: object.SIM,
+              price: object.PRICE || 0
+            };
           });
 
-          var sheetData = [];
-          var sheetObj = [];
-
-          workbook.SheetNames.forEach(function(sheetName) {
-            // Here is your object
-            var XL_row_object = XLSX.utils.sheet_to_row_object_array(
-              workbook.Sheets[sheetName]
-            );
-            var json_object = JSON.stringify(XL_row_object);
-            console.log(JSON.parse(json_object));
-
-            let data = JSON.parse(json_object);
-
-            let dataObj = data.map(object => {
-              return {
-                sim: object.SIM,
-                price: object.PRICE || 0
-              };
-            });
-
-            data = data.map(object => {
-              return object.SIM;
-            });
-
-            data = chuanhoa(sheetData.concat(data));
-            sheetData = data;
-            dataCH = data;
-
-            sheetObj = sheetObj.concat(chuanhoaObj(dataObj));
-            dataCHObj = sheetObj;
-
-            document.querySelector(
-              "#noti"
-            ).innerHTML = `<span class="badge badge-success">Đã xử lý chuỗi số thành công</span>`;
+          data = data.map(object => {
+            return object.SIM;
           });
-        };
 
-        reader.onerror = function(ex) {
-          console.log(ex);
-        };
+          data = chuanhoa(sheetData.concat(data));
+          sheetData = data;
+          dataCH = data;
 
-        reader.readAsBinaryString(file);
+          sheetObj = sheetObj.concat(chuanhoaObj(dataObj));
+          dataCHObj = sheetObj;
+
+          document.querySelector(
+            "#noti"
+          ).innerHTML = `<span class="badge badge-success">Đã xử lý chuỗi số thành công</span>`;
+        });
       };
+
+      reader.onerror = function (ex) {
+        console.log(ex);
+      };
+
+      reader.readAsBinaryString(file);
     };
+  };
 
-    function handleFileSelect(evt) {
-      var files = evt.target.files; // FileList object
-      var xl2json = new ExcelToJSON();
-      xl2json.parseExcel(files[0]);
-    }
-  </script>
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    var xl2json = new ExcelToJSON();
+    xl2json.parseExcel(files[0]);
+  }
+</script>
 
-  <body>
-    <script src="xls-export.js"></script>
-    <script src="filter.js"></script>
+<body>
+  <script src="xls-export.js"></script>
+  <script src="filter.js"></script>
 
-    <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Lọc sim số đẹp</a>
-    </nav>
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Lọc sim số đẹp</a>
+  </nav>
 
-    <div class="container">
-      <br />
-      <form enctype="multipart/form-data">
-        <input id="upload" type="file" name="files[]" />
-      </form>
-      <div id="noti"></div>
-      <br />
-    </div>
+  <div class="container">
+    <br />
+    <form enctype="multipart/form-data">
+      <input id="upload" type="file" name="files[]" />
+    </form>
+    <div id="noti"></div>
+    <br />
+  </div>
 
-    <div class="container">
-      <div class="card">
-        <div class="card-body">
-          <h5>Lọc theo abxy</h5>
+  <div class="container">
+    <div class="card">
+      <div class="card-body">
+        <h5>Lọc theo abxy</h5>
 
-          <form>
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Chiều dài đầu và cuối</span>
-                </div>
-                <input type="number" id="a" class="form-control" />
-                <input type="number" id="b" class="form-control" />
+        <form>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Chiều dài đầu và cuối</span>
               </div>
+              <input type="number" id="a" class="form-control" />
+              <input type="number" id="b" class="form-control" />
             </div>
+          </div>
 
-            <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Tổng số đầu và cuối</span>
-                </div>
-
-                <input type="number" id="x" class="form-control" />
-                <input type="number" id="y" class="form-control" />
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Tổng số đầu và cuối</span>
               </div>
+
+              <input type="number" id="x" class="form-control" />
+              <input type="number" id="y" class="form-control" />
             </div>
+          </div>
 
-            <div class="form-group">
-              <button
-                onclick="abxyFilter()"
-                type="button"
-                class="btn btn-primary"
-              >
-                Lọc và tải xuống
-              </button>
+          <div class="form-group">
+            <button onclick="abxyFilter()" type="button" class="btn btn-primary">
+              Lọc và tải xuống
+            </button>
 
-              <button
-                onclick="abxyFilterObj()"
-                type="button"
-                class="btn btn-success"
-              >
-                Lọc và tải xuống với giá
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <br />
-      <div class="card">
-        <div class="card-body">
-          <h5>Lọc số đuôi</h5>
-
-          <form>
-            <div class="form-group">
-              <div class="input-group flex-nowrap">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="addon-wrapping"
-                    >Nhập số đuôi</span
-                  >
-                </div>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="lastNum"
-                  placeholder="Số đuôi, ví dụ: 4243"
-                  aria-describedby="addon-wrapping"
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <button
-                onclick="lastFilter()"
-                type="button"
-                class="btn btn-success"
-              >
-                Lọc và tải xuống
-              </button>
-            </div>
-          </form>
-        </div>
+            <button onclick="abxyFilterObj()" type="button" class="btn btn-success">
+              Lọc và tải xuống với giá
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
-    <!-- <textarea
+    <br />
+    <div class="card">
+      <div class="card-body">
+        <h5>Lọc số đuôi</h5>
+
+        <form>
+          <div class="form-group">
+            <div class="input-group flex-nowrap">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="addon-wrapping">Nhập số đuôi</span>
+              </div>
+              <input type="text" class="form-control" id="lastNum" placeholder="Số đuôi, ví dụ: 4243"
+                aria-describedby="addon-wrapping" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button onclick="lastFilter()" type="button" class="btn btn-success">
+              Lọc và tải xuống
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- <textarea
       class="form-control"
       rows="35"
       cols="120"
       id="xlx_json"
     ></textarea> -->
 
-    <script>
-      document
-        .getElementById("upload")
-        .addEventListener("change", handleFileSelect, false);
-    </script>
+  <script>
+    document
+      .getElementById("upload")
+      .addEventListener("change", handleFileSelect, false);
+  </script>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-155739997-1"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "UA-155739997-1");
-    </script>
-  </body>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-155739997-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "UA-155739997-1");
+  </script>
+</body>
+
 </html>

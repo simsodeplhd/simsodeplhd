@@ -87,7 +87,7 @@ function lastFilter() {
 exportToCsvObj = function(typename, content, data) {
   var CsvString = content + "SIM, GIÁ\r\n";
   data.forEach(function(ColItem, ColIndex) {
-    CsvString += ColItem.sim + "," + ColItem.price + "\r\n";
+    CsvString += ColItem.sim + " ," + ColItem.price + "\r\n";
   });
 
   CsvString = "data:text/csv," + encodeURIComponent(CsvString);
