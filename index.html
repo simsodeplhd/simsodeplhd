@@ -26,7 +26,7 @@
         .replace(/\,/g, "")
         .replace(/O/g, "0")
         .replace(/ /g, "");
-        
+
       if (newItem.indexOf("=") != -1) newItem = newItem.substring(0, newItem.indexOf("="));
 
 
@@ -54,7 +54,10 @@
         .replace(/O/g, "0")
         .replace(/ /g, "");
 
-      if (newItem.sim.indexOf("=") != -1) newItem.sim = newItem.sim.substring(0, newItem.sim.indexOf("="));
+      if (newItem.sim.indexOf("=") != -1) {
+        newItem.price = newItem.sim.substring(newItem.sim.indexOf("=") + 1);
+        newItem.sim = newItem.sim.substring(0, newItem.sim.indexOf("="));
+      }
 
       newItem.price = JSON.stringify(newItem.price)
         .replace(/\./g, " ")
