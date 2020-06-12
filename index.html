@@ -198,6 +198,45 @@
       </div>
     </div>
 
+
+    <br/>
+    <div class="card">
+      <div class="card-body">
+        <h5>Lọc theo ab và các cặp xy</h5>
+
+        <form>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Chiều dài đầu và cuối</span>
+              </div>
+              <input type="number" id="a1" class="form-control" />
+              <input type="number" id="b1" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Tổng số đầu và cuối</span>
+              </div>
+
+              <input type="text" id="xArray" class="form-control" />
+              <input type="text" id="yArray" class="form-control" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button onclick="abxyFilterObjArray()" type="button" class="btn btn-success">
+              Lọc nhiều mẫu và tải xuống với giá
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+
     <br />
     <div class="card">
       <div class="card-body">
