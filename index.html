@@ -83,7 +83,7 @@
       }
 
       console.log("NEW", newItem.sim);
-      
+
       console.log("NEW", newItem.price);
       
       if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
@@ -165,6 +165,12 @@
 <body>
   <script src="xls-export.js"></script>
   <script src="filter.js"></script>
+
+  <style>
+    button{
+      margin-top: 2px;
+    }
+  </style>
 
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Lọc sim số đẹp</a>
