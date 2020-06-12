@@ -61,10 +61,31 @@
 
       newItem.price = JSON.stringify(newItem.price)
         .replace(/\./g, " ")
-        .replace(/\,/g, " ");
+        .replace(/\,/g, " ")
+        .replace(/\"/g, " ");
+
+      newItem.price = Number(newItem.price);
+
+      if (document.querySelector("#increase").checked) {
+        if (newItem.price < 500) {
+          newItem.price += 200;
+        } else if (newItem.price >= 500 && newItem.price < 1000) {
+          newItem.price += 300;
+        } else if (newItem.price >= 1000 && newItem.price < 3000) {
+          newItem.price += 400;
+        } else if (newItem.price >= 3000 && newItem.price < 5000) {
+          newItem.price += 500;
+        } else if (newItem.price >= 5000 && newItem.price < 10000) {
+          newItem.price += 600;
+        } else {
+          newItem.price += 1000;
+        }
+      }
 
       console.log("NEW", newItem.sim);
-
+      
+      console.log("NEW", newItem.price);
+      
       if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
       return newItem;
     });
@@ -153,6 +174,11 @@
     <br />
     <form enctype="multipart/form-data">
       <input id="upload" type="file" name="files[]" />
+
+      <label>
+        <input id="increase" type="checkbox" />
+        &nbsp; Tăng giá trước khi lọc
+      </label>
     </form>
     <div id="noti"></div>
     <br />
@@ -199,7 +225,7 @@
     </div>
 
 
-    <br/>
+    <br />
     <div class="card">
       <div class="card-body">
         <h5>Lọc theo ab và các cặp xy</h5>
