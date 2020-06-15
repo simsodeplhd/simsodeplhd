@@ -60,13 +60,17 @@
       }
 
       newItem.price = JSON.stringify(newItem.price)
+        .replace(/\./g, ".")
+        .replace(/\,/g, ".")
+        .replace(/\"/g, " ");
+
+
+      if (document.querySelector("#increase").checked) {
+        newItem.price = JSON.stringify(newItem.price)
         .replace(/\./g, " ")
         .replace(/\,/g, " ")
         .replace(/\"/g, " ");
-
-      newItem.price = Number(newItem.price);
-
-      if (document.querySelector("#increase").checked) {
+        newItem.price = Number(newItem.price);
         if (newItem.price < 500) {
           newItem.price += 200;
         } else if (newItem.price >= 500 && newItem.price < 1000) {
