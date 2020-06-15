@@ -98,6 +98,12 @@
       return item.sim.length == 10;
     });
 
+    newData = newData.filter((thing, index, self) =>
+      index === self.findIndex((t) => (
+       t.sim === thing.sim
+      ))
+    )
+
     return newData;
   }
 
