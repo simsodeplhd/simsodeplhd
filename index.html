@@ -34,9 +34,11 @@
       return newItem;
     });
 
+    if (!document.querySelector("#stk").checked) {
     newData = newData.filter(item => {
       return item.length == 10;
     });
+  }
 
     return newData;
   }
@@ -67,9 +69,9 @@
 
       if (document.querySelector("#increase").checked) {
         newItem.price = JSON.stringify(newItem.price)
-        .replace(/\./g, " ")
-        .replace(/\,/g, " ")
-        .replace(/\"/g, " ");
+          .replace(/\./g, " ")
+          .replace(/\,/g, " ")
+          .replace(/\"/g, " ");
         newItem.price = Number(newItem.price);
         if (newItem.price < 500) {
           newItem.price += 200;
@@ -86,17 +88,15 @@
         }
       }
 
-      console.log("NEW", newItem.sim);
-
-      console.log("NEW", newItem.price);
-      
       if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
       return newItem;
     });
 
-    newData = newData.filter(item => {
-      return item.sim.length == 10;
-    });
+    if (!document.querySelector("#stk").checked) {
+      newData = newData.filter(item => {
+        return item.sim.length == 10;
+      });
+    }
 
     newData = newData.filter((thing, index, self) =>
       index === self.findIndex((t) => (
@@ -177,7 +177,7 @@
   <script src="filter.js"></script>
 
   <style>
-    button{
+    button {
       margin-top: 2px;
     }
   </style>
@@ -191,10 +191,18 @@
     <form enctype="multipart/form-data">
       <input id="upload" type="file" name="files[]" />
 
+      <br><br>
       <label>
         <input id="increase" type="checkbox" />
         &nbsp; Tăng giá trước khi lọc
       </label>
+
+      <br>
+      <label>
+        <input id="stk" type="checkbox" />
+        &nbsp; Sử dụng bộ lọc cho số tài khoản
+      </label>
+
     </form>
     <div id="noti"></div>
     <br />
