@@ -30,15 +30,15 @@
       if (newItem.indexOf("=") != -1) newItem = newItem.substring(0, newItem.indexOf("="));
 
 
-      if (newItem.length == 9) newItem = "0" + newItem;
+      if (newItem.length == 9 || newItem.length == 12) newItem = "0" + newItem;
       return newItem;
     });
 
     if (!document.querySelector("#stk").checked) {
-    newData = newData.filter(item => {
-      return item.length == 10;
-    });
-  }
+      newData = newData.filter(item => {
+        return item.length == 10;
+      });
+    }
 
     return newData;
   }
@@ -88,7 +88,7 @@
         }
       }
 
-      if (newItem.sim.length == 9) newItem.sim = "0" + newItem.sim;
+      if (newItem.sim.length == 9 || newItem.length == 12) newItem.sim = "0" + newItem.sim;
       return newItem;
     });
 
