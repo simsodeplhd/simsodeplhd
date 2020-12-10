@@ -111,6 +111,10 @@
         }
       }
 
+      if (document.querySelector("#lamtron").checked) {
+        newItem.price = Math.ceil(newItem.price / 10) * 10;
+      }
+
       console.log(newItem);
 
       if (newItem.sim.length == 9 || newItem.length == 12) newItem.sim = "0" + newItem.sim;
@@ -250,6 +254,12 @@
       <label>
         <input id="chietkhau" type="checkbox" />
         &nbsp; Sửa chiết khấu trước khi lọc
+      </label>
+
+      <br>
+      <label>
+        <input id="lamtron" type="checkbox" />
+        &nbsp; Làm tròn giá trước khi lọc
       </label>
 
       <br>
