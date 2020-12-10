@@ -74,20 +74,44 @@
           .replace(/\,/g, " ")
           .replace(/\"/g, " ");
         newItem.price = Number(newItem.price);
-        if (newItem.price < 500) {
-          newItem.price += 200;
-        } else if (newItem.price >= 500 && newItem.price < 1000) {
-          newItem.price += 300;
-        } else if (newItem.price >= 1000 && newItem.price < 3000) {
-          newItem.price += 400;
-        } else if (newItem.price >= 3000 && newItem.price < 5000) {
-          newItem.price += 500;
-        } else if (newItem.price >= 5000 && newItem.price < 10000) {
-          newItem.price += 600;
+        // if (newItem.price < 500) {
+        //   newItem.price += 200;
+        // } else if (newItem.price >= 500 && newItem.price < 1000) {
+        //   newItem.price += 300;
+        // } else if (newItem.price >= 1000 && newItem.price < 3000) {
+        //   newItem.price += 400;
+        // } else if (newItem.price >= 3000 && newItem.price < 5000) {
+        //   newItem.price += 500;
+        // } else if (newItem.price >= 5000 && newItem.price < 10000) {
+        //   newItem.price += 600;
+        // } else {
+        //   newItem.price += 1000;
+        // }
+        if (newItem.price < 3000) {
+          newItem.price += 150;
+        } else newItem.price += 250;
+      }
+
+      if (document.querySelector("#chietkhau").checked) {
+        newItem.price = JSON.stringify(newItem.price)
+          .replace(/\./g, " ")
+          .replace(/\,/g, " ")
+          .replace(/\"/g, " ");
+        newItem.price = Number(newItem.price);
+        if (newItem.price < 1000) {
+          newItem.price *= 1.3;
+        } else if (newItem.price >= 1000 && newItem.price < 5000) {
+          newItem.price *= 1.25;
+        } else if (newItem.price >= 5 && newItem.price < 20000) {
+          newItem.price *= 1.2;
+        } else if (newItem.price >= 20000 && newItem.price < 100000) {
+          newItem.price *= 1.15;
         } else {
-          newItem.price += 1000;
+          newItem.price *= 1.10;
         }
       }
+
+      console.log(newItem);
 
       if (newItem.sim.length == 9 || newItem.length == 12) newItem.sim = "0" + newItem.sim;
       return newItem;
@@ -133,19 +157,34 @@
           console.log(XL_row_object);
 
           var json_object = JSON.stringify(XL_row_object);
-          console.log(JSON.parse(json_object));
 
           let data = JSON.parse(json_object);
+          console.log(data);
 
-          let dataObj = data.map(object => {
-            return {
-              sim: object.SIM,
-              price: object.PRICE || 0
-            };
-          });
+          let dataObj = [];
+          if (document.querySelector("#line").value == 0) {
+            dataObj = data.map(object => {
+              return {
+                sim: object.SIM,
+                price: object.PRICE || 0
+              };
+            });
+          } else {
+            data.forEach(object => {
+              for (let i = 1; i <= document.querySelector("#line").value; i++) {
+                dataObj.push({
+                  sim: object["SIM" + i],
+                  price: object["PRICE" + i]
+                });
+              }
+            });
+          }
 
-          data = data.map(object => {
-            return object.SIM;
+          console.log(dataObj);
+
+
+          data = dataObj.map(object => {
+            return object.sim;
           });
 
           data = chuanhoa(sheetData.concat(data));
@@ -196,9 +235,21 @@
       <input id="upload" type="file" name="files[]" />
 
       <br><br>
+
+      Số dòng cần gộp: <input type="number" id="line" value="0" class="form-control" />
+      Để là 0 nếu không cần gộp
+      <br /><br />
+
+
       <label>
         <input id="increase" type="checkbox" />
         &nbsp; Tăng giá trước khi lọc
+      </label>
+
+      <br>
+      <label>
+        <input id="chietkhau" type="checkbox" />
+        &nbsp; Sửa chiết khấu trước khi lọc
       </label>
 
       <br>
@@ -213,7 +264,7 @@
   </div>
 
   <div class="container">
-    
+
     <!-- <div class="card">
       <div class="card-body">
         <h5>Lọc theo abxy</h5>
@@ -290,8 +341,6 @@
       </div>
     </div>
 
-
-
     <br />
     <div class="card">
       <div class="card-body">
@@ -316,6 +365,7 @@
         </form>
       </div>
     </div>
+
   </div>
 
   <!-- <textarea
